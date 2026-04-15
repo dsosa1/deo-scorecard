@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DEO Dental Scorecard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#1a1a1a;color:#f0f0f0;min-height:100vh;display:flex;flex-direction:column}
+:root{--red:#c0392b;--red2:#a93226;--dark:#1a1a1a;--card:#242424;--border:#3a3a3a;--text:#f0f0f0;--muted:#909090}
+.top-bar{background:#111;border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.top-bar img{height:38px;object-fit:contain}
+.nav-tabs{display:flex;gap:4px}
+.tab{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s}
+.tab.active{background:var(--red);color:#fff}
+.tab:hover:not(.active){background:#333;color:var(--text)}
+main{flex:1;padding:24px}
+.page{display:none}
+.page.active{display:block}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red)}
+.kpi-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
+.kpi-value{font-size:26px;font-weight:700;color:var(--text);line-height:1}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:6px}
+.kpi-delta{font-size:12px;margin-top:4px}
+.kpi-delta.up{color:#4cde9a}
+.kpi-delta.down{color:#f07070}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:640px){.charts-grid{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.chart-title{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:14px}
+.chart-wrap{position:relative;height:180px}
+.form-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:520px;margin:0 auto}
+.form-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.form-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:7px}
+.form-hint{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:6px}
+.form-input{width:100%;padding:10px 14px;background:#111;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px;outline:none;transition:border .15s}
+.form-input:focus{border-color:var(--red)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.month-select{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.select-input{padding:9px 12px;background:#111;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none;width:100%}
+.select-input:focus{border-color:var(--red)}
+.calc-preview{background:#111;border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.calc-item{text-align:center}
+.calc-label{font-size:11px;color:var(--muted);margin-bottom:3px}
+.calc-val{font-size:16px;font-weight:700;color:var(--red)}
+.btn-primary{width:100%;padding:12px;background:var(--red);border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-primary:hover{background:var(--red2)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.history-wrap{overflow-x:auto}
+.history-table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
+.history-table th{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.history-table td{padding:12px 14px;border-bottom:1px solid #2a2a2a;color:var(--text)}
+.history-table tr:last-child td{border-bottom:none}
+.history-table tr:hover td{background:rgba(192,57,43,.05)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(192,57,43,.18);color:#e07070}
+.empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px}
+.empty-icon{font-size:32px;margin-bottom:12px;opacity:.4}
+.del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px}
+.del-btn:hover{color:#f07070}
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;z-index:999;transform:translateY(80px);transition:transform .3s}
+.toast.success{background:#1a3d2e;border:1px solid #4cde9a;color:#4cde9a}
+.toast.error{background:#3d1a1a;border:1px solid #f07070;color:#f07070}
+.toast.show{transform:translateY(0)}
+.loading{text-align:center;padding:24px;color:var(--muted);font-size:14px}
+footer{border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:8px}
+footer span{font-size:11px;color:var(--muted)}
+footer a{display:flex;align-items:center}
+footer img{height:16px;object-fit:contain;filter:brightness(0.7)}
+footer a:hover img{filter:brightness(1)}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <img src="/deo-logo.png" alt="DEO Dental Group"/>
+  <div class="nav-tabs">
+    <button class="tab active" onclick="showPage('scorecard',this)">Scorecard</button>
+    <button class="tab" onclick="showPage('log',this)">Log month</button>
+    <button class="tab" onclick="showPage('history',this)">History</button>
+  </div>
+</div>
+
+<main>
+  <div id="page-scorecard" class="page active">
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="loading">Loading scorecard…</div>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-card"><div class="chart-title">New patients / month</div><div class="chart-wrap"><canvas id="c-patients" role="img" aria-label="New patients per month"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Total production ($)</div><div class="chart-wrap"><canvas id="c-production" role="img" aria-label="Production per month"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">CAC — cost per new patient</div><div class="chart-wrap"><canvas id="c-cac" role="img" aria-label="CAC per month"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">New patient production ROI</div><div class="chart-wrap"><canvas id="c-roi" role="img" aria-label="New patient production ROI per month"></canvas></div></div>
+    </div>
+  </div>
+
+  <div id="page-log" class="page">
+    <div class="form-section">
+      <div class="form-title">Log a month</div>
+      <div class="form-sub">Enter your numbers — CAC and ROI calculate automatically.</div>
+      <div class="month-select">
+        <select class="select-input" id="sel-month">
+          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+        </select>
+        <select class="select-input" id="sel-year"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">New patients</label>
+        <input class="form-input" id="f-patients" type="number" min="0" placeholder="e.g. 42" oninput="updatePreview()"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Total production ($)</label>
+          <input class="form-input" id="f-production" type="number" min="0" placeholder="e.g. 85000" oninput="updatePreview()"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total ad spend ($)</label>
+          <input class="form-input" id="f-spend" type="number" min="0" placeholder="e.g. 5000" oninput="updatePreview()"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Production from new patients ($)</label>
+        <div class="form-hint">Revenue generated specifically by new patients this month</div>
+        <input class="form-input" id="f-np-production" type="number" min="0" placeholder="e.g. 22000" oninput="updatePreview()"/>
+      </div>
+      <div class="calc-preview">
+        <div class="calc-item"><div class="calc-label">CAC</div><div class="calc-val" id="prev-cac">—</div></div>
+        <div class="calc-item"><div class="calc-label">Overall ROI</div><div class="calc-val" id="prev-roi">—</div></div>
+        <div class="calc-item"><div class="calc-label">NP prod. ROI</div><div class="calc-val" id="prev-np-roi">—</div></div>
+      </div>
+      <button class="btn-primary" id="save-btn" onclick="saveEntry()">Save &amp; view scorecard</button>
+    </div>
+  </div>
+
+  <div id="page-history" class="page">
+    <div class="chart-card">
+      <div id="history-body"><div class="loading">Loading…</div></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>Powered by</span>
+  <a href="https://growwithom.com" target="_blank" rel="noopener">
+    <img src="/om-logo.png" alt="OM Performance Marketing"/>
+  </a>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const C={red:'#c0392b',border:'#3a3a3a',muted:'#909090',text:'#f0f0f0',green:'#4cde9a',amber:'#f0b340'};
+let data=[];
+let charts={};
+
+async function fetchData(){
+  try{
+    const r=await fetch('/api/entries');
+    data=await r.json();
+  }catch(e){data=[];}
+}
+
+async function saveEntry(){
+  const p=+document.getElementById('f-patients').value;
+  const pr=+document.getElementById('f-production').value;
+  const sp=+document.getElementById('f-spend').value;
+  const np=+document.getElementById('f-np-production').value;
+  const m=+document.getElementById('sel-month').value;
+  const y=+document.getElementById('sel-year').value;
+  if(!p||!pr||!sp||!np){showToast('Please fill in all four fields.','error');return;}
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true;btn.textContent='Saving…';
+  try{
+    await fetch('/api/entries',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({month:m,year:y,patients:p,production:pr,spend:sp,np_production:np})
+    });
+    ['f-patients','f-production','f-spend','f-np-production'].forEach(id=>document.getElementById(id).value='');
+    updatePreview();
+    await fetchData();
+    showToast('Entry saved!','success');
+    showPage('scorecard');
+  }catch(e){showToast('Error saving entry.','error');}
+  btn.disabled=false;btn.textContent='Save & view scorecard';
+}
+
+async function deleteEntry(month,year){
+  if(!confirm('Delete this entry?'))return;
+  await fetch('/api/entries',{
+    method:'DELETE',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({month,year})
+  });
+  await fetchData();
+  renderHistory();
+}
+
+function showPage(p,el){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  const tab=el||document.querySelector(`.tab[onclick*="'${p}'"]`);
+  if(tab)tab.classList.add('active');
+  if(p==='scorecard')renderScorecard();
+  if(p==='history')renderHistory();
+}
+
+function fmt$(n){return'$'+Math.round(n).toLocaleString('en-US');}
+function fmtN(n){return(+n).toLocaleString('en-US');}
+function sorted(){return [...data].sort((a,b)=>(a.year*100+a.month)-(b.year*100+b.month));}
+function monthLabel(m,y){return MONTHS[m-1]+' '+y;}
+
+function delta(arr,key){
+  if(arr.length<2)return null;
+  const prev=+arr[arr.length-2][key],cur=+arr[arr.length-1][key];
+  if(!prev)return null;
+  return((cur-prev)/prev*100).toFixed(1);
+}
+
+function renderScorecard(){
+  const s=sorted();
+  const grid=document.getElementById('kpi-grid');
+  if(!s.length){
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📊</div><div>No data yet — log your first month to get started.</div></div>';
+    destroyCharts();return;
+  }
+  const last=s[s.length-1];
+  const cac=last.patients?last.spend/last.patients:0;
+  const roi=last.spend?last.production/last.spend:0;
+  const npRoi=last.spend&&last.np_production?last.np_production/last.spend:0;
+
+  function kpiDelta(key,invert=false){
+    const d=delta(s,key);if(d===null)return'';
+    const up=invert?(+d<0):(+d>0);
+    return`<div class="kpi-delta ${up?'up':'down'}">${+d>0?'▲':'▼'} ${Math.abs(d)}% vs prev</div>`;
+  }
+
+  grid.innerHTML=`
+    <div class="kpi"><div class="kpi-label">New patients</div><div class="kpi-value">${fmtN(last.patients)}</div>${kpiDelta('patients')}<div class="kpi-sub">${monthLabel(last.month,last.year)}</div></div>
+    <div class="kpi"><div class="kpi-label">Total production</div><div class="kpi-value">${fmt$(last.production)}</div>${kpiDelta('production')}</div>
+    <div class="kpi"><div class="kpi-label">Ad spend</div><div class="kpi-value">${fmt$(last.spend)}</div>${kpiDelta('spend',true)}</div>
+    <div class="kpi"><div class="kpi-label">CAC</div><div class="kpi-value">${fmt$(cac)}</div><div class="kpi-sub">per new patient</div></div>
+    <div class="kpi"><div class="kpi-label">Overall ROI</div><div class="kpi-value">${(+roi).toFixed(2)}×</div><div class="kpi-sub">total production / spend</div></div>
+    <div class="kpi"><div class="kpi-label">New pt. production ROI</div><div class="kpi-value">${(+npRoi).toFixed(2)}×</div><div class="kpi-sub">new pt. production / spend</div></div>
+  `;
+
+  const labels=s.map(r=>MONTHS[r.month-1]+' '+String(r.year).slice(2));
+  makeChart('c-patients',labels,s.map(r=>+r.patients),'New patients',C.red,false);
+  makeChart('c-production',labels,s.map(r=>+r.production),'Production',C.red,true);
+  makeChart('c-cac',labels,s.map(r=>r.patients?+(r.spend/r.patients).toFixed(0):0),'CAC',C.amber,true);
+  makeChart('c-roi',labels,s.map(r=>r.spend&&r.np_production?+(r.np_production/r.spend).toFixed(2):0),'NP ROI',C.green,false);
+}
+
+function chartOpts(labels,vals,label,color,isCurrency){
+  return{type:'line',data:{labels,datasets:[{label,data:vals,borderColor:color,backgroundColor:color+'22',borderWidth:2.5,pointBackgroundColor:color,pointRadius:4,pointHoverRadius:6,tension:.35,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>isCurrency?'$'+c.parsed.y.toLocaleString():c.parsed.y}}},
+      scales:{
+        x:{ticks:{color:C.muted,font:{size:11},maxRotation:45,autoSkip:false},grid:{color:'#3a3a3a55'}},
+        y:{ticks:{color:C.muted,font:{size:11},callback:v=>isCurrency?'$'+Number(v).toLocaleString():v},grid:{color:'#3a3a3a55'}}
+      }
+    }
+  };
+}
+
+function makeChart(id,labels,vals,label,color,isCurrency){
+  if(charts[id])charts[id].destroy();
+  const canvas=document.getElementById(id);
+  if(!canvas)return;
+  charts[id]=new Chart(canvas,chartOpts(labels,vals,label,color,isCurrency));
+}
+
+function destroyCharts(){Object.values(charts).forEach(c=>c.destroy());charts={};}
+
+function updatePreview(){
+  const p=+document.getElementById('f-patients').value||0;
+  const pr=+document.getElementById('f-production').value||0;
+  const sp=+document.getElementById('f-spend').value||0;
+  const np=+document.getElementById('f-np-production').value||0;
+  document.getElementById('prev-cac').textContent=p&&sp?'$'+Math.round(sp/p).toLocaleString():'—';
+  document.getElementById('prev-roi').textContent=sp&&pr?(pr/sp).toFixed(2)+'×':'—';
+  document.getElementById('prev-np-roi').textContent=sp&&np?(np/sp).toFixed(2)+'×':'—';
+}
+
+function renderHistory(){
+  const s=sorted().reverse();
+  const body=document.getElementById('history-body');
+  if(!s.length){body.innerHTML='<div class="empty"><div class="empty-icon">🗂</div><div>No entries yet.</div></div>';return;}
+  body.innerHTML=`<div class="history-wrap"><table class="history-table">
+    <thead><tr><th>Month</th><th>New patients</th><th>Total production</th><th>NP production</th><th>Ad spend</th><th>CAC</th><th>Overall ROI</th><th>NP prod. ROI</th><th></th></tr></thead>
+    <tbody>${s.map(r=>{
+      const cac=r.patients?r.spend/r.patients:0;
+      const roi=r.spend?r.production/r.spend:0;
+      const npRoi=r.spend&&r.np_production?r.np_production/r.spend:0;
+      return`<tr>
+        <td><span class="badge">${monthLabel(r.month,r.year)}</span></td>
+        <td>${fmtN(r.patients)}</td><td>${fmt$(r.production)}</td><td>${fmt$(r.np_production||0)}</td>
+        <td>${fmt$(r.spend)}</td><td>${fmt$(cac)}</td>
+        <td>${(+roi).toFixed(2)}×</td><td>${(+npRoi).toFixed(2)}×</td>
+        <td><button class="del-btn" onclick="deleteEntry(${r.month},${r.year})">✕</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function initYearSelect(){
+  const sel=document.getElementById('sel-year');
+  const now=new Date();const cy=now.getFullYear();
+  for(let y=cy-2;y<=cy+1;y++){const o=document.createElement('option');o.value=y;o.textContent=y;if(y===cy)o.selected=true;sel.appendChild(o);}
+  document.getElementById('sel-month').value=now.getMonth()+1;
+  sel.addEventListener('change',updatePreview);
+  document.getElementById('sel-month').addEventListener('change',updatePreview);
+  updatePreview();
+}
+
+(async()=>{
+  initYearSelect();
+  await fetchData();
+  renderScorecard();
+})();
+</script>
+</body>
+</html>
