@@ -1,22 +1,38 @@
-import { sql } from '@vercel/postgres';
-import { initDb } from './db.js';
+import { neon } from '@neondatabase/serverless';
+
+function getDb() {
+  return neon(process.env.DATABASE_URL);
+}
+
+async function initDb(sql) {
+  await sql`
+    CREATE TABLE IF NOT EXISTS entries (
+      id SERIAL PRIMARY KEY,
+      month INTEGER NOT NULL,
+      year INTEGER NOT NULL,
+      patients INTEGER NOT NULL,
+      production NUMERIC NOT NULL,
+      spend NUMERIC NOT NULL,
+      np_production NUMERIC NOT NULL,
+      UNIQUE(month, year)
+    )
+  `;
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  await initDb();
+  const sql = getDb();
+  await initDb(sql);
 
-  // GET all entries
   if (req.method === 'GET') {
-    const { rows } = await sql`SELECT * FROM entries ORDER BY year, month`;
+    const rows = await sql`SELECT * FROM entries ORDER BY year, month`;
     return res.status(200).json(rows);
   }
 
-  // POST - save or update an entry
   if (req.method === 'POST') {
     const { month, year, patients, production, spend, np_production } = req.body;
     await sql`
@@ -31,7 +47,6 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true });
   }
 
-  // DELETE an entry
   if (req.method === 'DELETE') {
     const { month, year } = req.body;
     await sql`DELETE FROM entries WHERE month = ${month} AND year = ${year}`;
