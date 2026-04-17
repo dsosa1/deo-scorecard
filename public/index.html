@@ -8,17 +8,86 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#1a1a1a;color:#f0f0f0;min-height:100vh;display:flex;flex-direction:column}
-:root{--red:#c0392b;--red2:#a93226;--dark:#1a1a1a;--card:#242424;--border:#3a3a3a;--text:#f0f0f0;--muted:#909090}
-.top-bar{background:#111;border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.top-bar img{height:38px;object-fit:contain}
-.nav-tabs{display:flex;gap:4px}
-.tab{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s}
+:root{--red:#c0392b;--red2:#a93226;--card:#242424;--card2:#2e2e2e;--border:#3a3a3a;--text:#f0f0f0;--muted:#909090}
+
+/* LOGIN */
+.login-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:380px;text-align:center}
+.deo-icon{width:56px;height:56px;background:#8B0000;border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.deo-icon svg{width:46px;height:46px}
+.login-title{font-size:22px;font-weight:700;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.login-input{width:100%;padding:11px 14px;background:#111;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px;outline:none;margin-bottom:12px;text-align:center}
+.login-input:focus{border-color:var(--red)}
+.login-btn{width:100%;padding:12px;background:var(--red);border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer}
+.login-btn:hover{background:var(--red2)}
+.login-error{color:#f07070;font-size:13px;margin-top:10px;min-height:18px}
+
+/* LOCATION PICKER */
+.loc-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
+.loc-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px;width:100%;max-width:480px}
+.loc-title{font-size:22px;font-weight:700;margin-bottom:6px;text-align:center}
+.loc-sub{font-size:13px;color:var(--muted);margin-bottom:24px;text-align:center}
+.loc-practice-banner{background:#111;border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:16px;text-align:center;font-size:13px;color:var(--muted)}
+.loc-practice-banner strong{color:var(--text);font-size:14px;display:block}
+.loc-btn{width:100%;padding:18px 20px;background:#111;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:16px;font-weight:600;cursor:pointer;margin-bottom:10px;text-align:left;transition:all .15s;display:flex;align-items:center;justify-content:space-between}
+.loc-btn:hover{border-color:var(--red);background:#161616}
+.loc-btn-arrow{color:var(--muted);font-size:18px}
+.loc-btn:hover .loc-btn-arrow{color:var(--red)}
+
+/* APP */
+.app{display:flex;flex-direction:column;flex:1}
+.top-bar{background:#111;border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.deo-logo{display:flex;align-items:center;gap:12px}
+.deo-logo-box{width:38px;height:38px;background:#8B0000;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.deo-logo-box svg{width:32px;height:32px}
+.practice-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.practice-name{font-size:15px;font-weight:700;color:var(--text)}
+.practice-sep{color:var(--muted);font-size:14px}
+/* LOCATION DROPDOWN */
+.loc-dd{position:relative}
+.loc-dd-btn{display:flex;align-items:center;gap:6px;background:#1e1e1e;border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;color:var(--text);cursor:pointer;font-weight:500}
+.loc-dd-btn:hover{border-color:var(--red)}
+.loc-dd-btn .caret{font-size:10px;color:var(--muted);margin-left:2px}
+.loc-dd-menu{display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--card2);border:1px solid var(--border);border-radius:8px;min-width:220px;box-shadow:0 4px 16px rgba(0,0,0,.4);z-index:100;overflow:hidden}
+.loc-dd-menu.open{display:block}
+.loc-dd-item{padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid #2a2a2a;color:var(--text)}
+.loc-dd-item:last-child{border-bottom:none}
+.loc-dd-item:hover{background:#3a3a3a}
+.loc-dd-item.active{background:rgba(192,57,43,.2);color:#e07070;font-weight:600}
+
+.nav-tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s}
 .tab.active{background:var(--red);color:#fff}
 .tab:hover:not(.active){background:#333;color:var(--text)}
+.logout-btn{font-size:12px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.logout-btn:hover{color:var(--text)}
+
+/* ADMIN */
+.admin-bar{background:#0d0d0d;border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.admin-badge{background:rgba(192,57,43,.2);color:#e07070;font-size:11px;font-weight:600;padding:3px 10px;border-radius:4px;letter-spacing:.05em;white-space:nowrap}
+.admin-label{font-size:12px;color:var(--muted);font-weight:600}
+.admin-select{padding:8px 12px;background:#111;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none;min-width:280px}
+
+/* FILTER BAR */
+.filter-bar{padding:14px 24px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);background:#1e1e1e;flex-wrap:wrap}
+.filter-label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s}
+.pill.active{background:var(--red);border-color:var(--red);color:#fff}
+.pill:hover:not(.active){border-color:var(--muted);color:var(--text)}
+.filter-info{margin-left:auto;font-size:12px;color:var(--muted)}
+
 main{flex:1;padding:24px}
 .page{display:none}
 .page.active{display:block}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:28px}
+
+/* LOG FORM BANNER */
+.log-banner{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);border-radius:8px;padding:10px 14px;margin-bottom:20px;font-size:13px;color:#e07070;text-align:center}
+.log-banner strong{color:#ffb8b8}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:28px}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;position:relative;overflow:hidden}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red)}
 .kpi-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
@@ -32,6 +101,8 @@ main{flex:1;padding:24px}
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
 .chart-title{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:14px}
 .chart-wrap{position:relative;height:180px}
+
+/* FORM */
 .form-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:520px;margin:0 auto}
 .form-title{font-size:18px;font-weight:700;margin-bottom:6px}
 .form-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
@@ -50,7 +121,11 @@ main{flex:1;padding:24px}
 .calc-val{font-size:16px;font-weight:700;color:var(--red)}
 .btn-primary{width:100%;padding:12px;background:var(--red);border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:background .15s}
 .btn-primary:hover{background:var(--red2)}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{padding:10px 18px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-secondary:hover{border-color:var(--red);color:var(--red)}
+.btn-danger{padding:8px 16px;background:transparent;border:1px solid #f07070;border-radius:8px;color:#f07070;font-size:13px;font-weight:500;cursor:pointer}
+
+/* HISTORY */
 .history-wrap{overflow-x:auto}
 .history-table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
 .history-table th{text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
@@ -58,229 +133,628 @@ main{flex:1;padding:24px}
 .history-table tr:last-child td{border-bottom:none}
 .history-table tr:hover td{background:rgba(192,57,43,.05)}
 .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(192,57,43,.18);color:#e07070}
+
 .empty{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px}
 .empty-icon{font-size:32px;margin-bottom:12px;opacity:.4}
 .del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px}
 .del-btn:hover{color:#f07070}
+
+/* MANAGE */
+.manage-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.manage-title{font-size:20px;font-weight:700}
+.manage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.practice-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.practice-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px}
+.practice-card-name{font-size:16px;font-weight:700}
+.practice-card-code{font-size:12px;color:var(--muted);margin-top:2px;font-family:ui-monospace,monospace}
+.loc-tag{display:inline-flex;align-items:center;gap:6px;background:#111;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:13px;margin:4px 4px 4px 0}
+.loc-tag-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:0 2px}
+.loc-tag-del:hover{color:#f07070}
+.add-loc-row{display:flex;gap:8px;margin-top:10px}
+.add-loc-input{flex:1;padding:8px 12px;background:#111;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none}
+.add-loc-input:focus{border-color:var(--red)}
+.add-loc-btn{padding:8px 14px;background:var(--red);border:none;border-radius:8px;color:#fff;font-size:13px;cursor:pointer}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-size:18px;font-weight:700}
+.modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0 6px}
+.modal-close:hover{color:var(--text)}
+.loc-list-item{display:flex;align-items:center;justify-content:space-between;background:#111;border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:8px;font-size:14px}
+.loc-list-item button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0 4px}
+.loc-list-item button:hover{color:#f07070}
+.add-loc-inline{display:flex;gap:8px;margin-top:4px}
+
 .toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;z-index:999;transform:translateY(80px);transition:transform .3s}
 .toast.success{background:#1a3d2e;border:1px solid #4cde9a;color:#4cde9a}
 .toast.error{background:#3d1a1a;border:1px solid #f07070;color:#f07070}
 .toast.show{transform:translateY(0)}
-.loading{text-align:center;padding:24px;color:var(--muted);font-size:14px}
-footer{border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:8px}
+footer{border-top:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:center;gap:8px}
 footer span{font-size:11px;color:var(--muted)}
-footer a{display:flex;align-items:center}
-footer img{height:16px;object-fit:contain;filter:brightness(0.7)}
-footer a:hover img{filter:brightness(1)}
+footer a{font-size:11px;color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <img src="/deo-logo.png" alt="DEO Dental Group"/>
-  <div class="nav-tabs">
-    <button class="tab active" onclick="showPage('scorecard',this)">Scorecard</button>
-    <button class="tab" onclick="showPage('log',this)">Log month</button>
-    <button class="tab" onclick="showPage('history',this)">History</button>
+<!-- LOGIN -->
+<div id="view-login" class="login-wrap">
+  <div class="login-box">
+    <div class="deo-icon">
+      <svg viewBox="0 0 44 44" fill="none"><text x="1" y="30" font-family="system-ui,sans-serif" font-weight="800" font-size="19" fill="white">DE</text><circle cx="35" cy="22" r="7" stroke="white" stroke-width="2.5"/><line x1="35" y1="11" x2="35" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="35,10 33,14 37,14" fill="white"/><line x1="35" y1="29" x2="35" y2="33" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="35,34 33,30 37,30" fill="white"/><line x1="24" y1="22" x2="28" y2="22" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="23,22 27,20 27,24" fill="white"/><line x1="42" y1="22" x2="46" y2="22" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="46,22 42,20 42,24" fill="white"/></svg>
+    </div>
+    <div class="login-title">DEO Dental Scorecard</div>
+    <div class="login-sub">Enter your practice code and PIN to continue</div>
+    <input class="login-input" id="login-code" placeholder="Practice code" oninput="this.value=this.value.toUpperCase()"/>
+    <input class="login-input" id="login-pin" type="password" placeholder="PIN" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">Sign in</button>
+    <div class="login-error" id="login-error"></div>
   </div>
 </div>
 
-<main>
-  <div id="page-scorecard" class="page active">
-    <div class="kpi-grid" id="kpi-grid">
-      <div class="loading">Loading scorecard…</div>
-    </div>
-    <div class="charts-grid">
-      <div class="chart-card"><div class="chart-title">New patients / month</div><div class="chart-wrap"><canvas id="c-patients" role="img" aria-label="New patients per month"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">Total production ($)</div><div class="chart-wrap"><canvas id="c-production" role="img" aria-label="Production per month"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">CAC — cost per new patient</div><div class="chart-wrap"><canvas id="c-cac" role="img" aria-label="CAC per month"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">New patient production ROI</div><div class="chart-wrap"><canvas id="c-roi" role="img" aria-label="New patient production ROI per month"></canvas></div></div>
-    </div>
+<!-- LOCATION PICKER -->
+<div id="view-locations" style="display:none" class="loc-wrap">
+  <div class="loc-box">
+    <div class="loc-practice-banner"><strong id="loc-practice-name">—</strong><span>Welcome back</span></div>
+    <div class="loc-title">Which location would you like to work on?</div>
+    <div class="loc-sub">You can switch between locations anytime from the top bar</div>
+    <div id="loc-list"></div>
+    <button class="logout-btn" style="margin-top:12px;width:100%" onclick="doLogout()">Sign out</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="view-app" class="app" style="display:none">
+  <div id="admin-bar" class="admin-bar" style="display:none">
+    <span class="admin-badge">DEO ADMIN</span>
+    <span class="admin-label">Viewing:</span>
+    <select class="admin-select" id="admin-select" onchange="adminSwitch()">
+      <option value="">— Select a practice / location —</option>
+    </select>
   </div>
 
-  <div id="page-log" class="page">
-    <div class="form-section">
-      <div class="form-title">Log a month</div>
-      <div class="form-sub">Enter your numbers — CAC and ROI calculate automatically.</div>
-      <div class="month-select">
-        <select class="select-input" id="sel-month">
-          <option value="1">January</option><option value="2">February</option><option value="3">March</option>
-          <option value="4">April</option><option value="5">May</option><option value="6">June</option>
-          <option value="7">July</option><option value="8">August</option><option value="9">September</option>
-          <option value="10">October</option><option value="11">November</option><option value="12">December</option>
-        </select>
-        <select class="select-input" id="sel-year"></select>
+  <div class="top-bar">
+    <div class="deo-logo">
+      <div class="deo-logo-box">
+        <svg viewBox="0 0 44 44" fill="none"><text x="1" y="30" font-family="system-ui,sans-serif" font-weight="800" font-size="19" fill="white">DE</text><circle cx="35" cy="22" r="7" stroke="white" stroke-width="2.5"/><line x1="35" y1="11" x2="35" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="35,10 33,14 37,14" fill="white"/><line x1="35" y1="29" x2="35" y2="33" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="35,34 33,30 37,30" fill="white"/><line x1="24" y1="22" x2="28" y2="22" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="23,22 27,20 27,24" fill="white"/><line x1="42" y1="22" x2="46" y2="22" stroke="white" stroke-width="2" stroke-linecap="round"/><polygon points="46,22 42,20 42,24" fill="white"/></svg>
       </div>
-      <div class="form-group">
-        <label class="form-label">New patients</label>
-        <input class="form-input" id="f-patients" type="number" min="0" placeholder="e.g. 42" oninput="updatePreview()"/>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Total production ($)</label>
-          <input class="form-input" id="f-production" type="number" min="0" placeholder="e.g. 85000" oninput="updatePreview()"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Total ad spend ($)</label>
-          <input class="form-input" id="f-spend" type="number" min="0" placeholder="e.g. 5000" oninput="updatePreview()"/>
+      <div class="practice-info">
+        <span class="practice-name" id="bar-practice">—</span>
+        <span class="practice-sep" id="bar-sep">—</span>
+        <div class="loc-dd" id="loc-dd">
+          <button class="loc-dd-btn" onclick="toggleLocDD(event)">
+            <span id="bar-location">—</span>
+            <span class="caret" id="loc-caret">▾</span>
+          </button>
+          <div class="loc-dd-menu" id="loc-dd-menu"></div>
         </div>
       </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="tab active" onclick="showPage('scorecard',this)">Scorecard</button>
+      <button class="tab" onclick="showPage('log',this)">Log month</button>
+      <button class="tab" onclick="showPage('history',this)">History</button>
+      <button class="tab" id="tab-manage" style="display:none" onclick="showPage('manage',this)">Manage practices</button>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">Sign out</button>
+  </div>
+
+  <div class="filter-bar" id="filter-bar">
+    <span class="filter-label">Timeframe</span>
+    <div class="filter-pills">
+      <button class="pill" onclick="setFilter(1,this)">1 month</button>
+      <button class="pill" onclick="setFilter(3,this)">3 months</button>
+      <button class="pill active" onclick="setFilter(6,this)">6 months</button>
+      <button class="pill" onclick="setFilter(12,this)">12 months</button>
+      <button class="pill" onclick="setFilter(0,this)">All time</button>
+    </div>
+    <span class="filter-info" id="filter-info"></span>
+  </div>
+
+  <main>
+    <div id="page-scorecard" class="page active">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;font-weight:600" id="avg-note"></div>
+      <div class="kpi-grid" id="kpi-grid">
+        <div class="empty" style="grid-column:1/-1;padding:48px"><div class="empty-icon">📊</div><div>Select a practice to view their scorecard.</div></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card"><div class="chart-title">New patients / month</div><div class="chart-wrap"><canvas id="c-patients" role="img" aria-label="New patients"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">Total production ($)</div><div class="chart-wrap"><canvas id="c-production" role="img" aria-label="Production"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">CAC — cost per new patient</div><div class="chart-wrap"><canvas id="c-cac" role="img" aria-label="CAC"></canvas></div></div>
+        <div class="chart-card"><div class="chart-title">New patient production ROI</div><div class="chart-wrap"><canvas id="c-roi" role="img" aria-label="NP ROI"></canvas></div></div>
+      </div>
+    </div>
+
+    <div id="page-log" class="page">
+      <div class="form-section">
+        <div class="log-banner" id="log-banner">Logging for <strong id="log-banner-loc">—</strong></div>
+        <div class="form-title">Log a month</div>
+        <div class="form-sub">Enter your numbers — CAC and ROI calculate automatically.</div>
+        <div class="month-select">
+          <select class="select-input" id="sel-month">
+            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+          </select>
+          <select class="select-input" id="sel-year"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">New patients</label>
+          <input class="form-input" id="f-patients" type="number" min="0" placeholder="e.g. 42" oninput="updatePreview()"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Total production ($)</label>
+            <input class="form-input" id="f-production" type="number" min="0" placeholder="e.g. 85000" oninput="updatePreview()"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total ad spend ($)</label>
+            <input class="form-input" id="f-spend" type="number" min="0" placeholder="e.g. 5000" oninput="updatePreview()"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Production from new patients ($)</label>
+          <div class="form-hint">Revenue generated specifically by new patients this month</div>
+          <input class="form-input" id="f-np-production" type="number" min="0" placeholder="e.g. 22000" oninput="updatePreview()"/>
+        </div>
+        <div class="calc-preview">
+          <div class="calc-item"><div class="calc-label">CAC</div><div class="calc-val" id="prev-cac">—</div></div>
+          <div class="calc-item"><div class="calc-label">Overall ROI</div><div class="calc-val" id="prev-roi">—</div></div>
+          <div class="calc-item"><div class="calc-label">NP prod. ROI</div><div class="calc-val" id="prev-np-roi">—</div></div>
+        </div>
+        <button class="btn-primary" onclick="saveEntry()">Save &amp; view scorecard</button>
+      </div>
+    </div>
+
+    <div id="page-history" class="page">
+      <div class="chart-card"><div id="history-body"></div></div>
+    </div>
+
+    <div id="page-manage" class="page">
+      <div class="manage-header">
+        <div class="manage-title">Manage practices</div>
+        <button class="btn-primary" style="width:auto;padding:10px 20px" onclick="openAddModal()">+ Add practice</button>
+      </div>
+      <div class="manage-grid" id="manage-grid"></div>
+    </div>
+  </main>
+
+  <footer>
+    <span>Powered by</span>
+    <a href="https://growwithom.com" target="_blank" rel="noopener">OM Performance Marketing</a>
+  </footer>
+</div>
+
+<!-- ADD PRACTICE MODAL -->
+<div class="modal-bg" id="add-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add new practice</div>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Practice name</div>
+      <input class="form-input" id="np-name" placeholder="e.g. Smile Dental"/>
+    </div>
+    <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Production from new patients ($)</label>
-        <div class="form-hint">Revenue generated specifically by new patients this month</div>
-        <input class="form-input" id="f-np-production" type="number" min="0" placeholder="e.g. 22000" oninput="updatePreview()"/>
+        <div class="form-label">Login code</div>
+        <input class="form-input" id="np-code" placeholder="e.g. SMILE1" oninput="this.value=this.value.toUpperCase()"/>
       </div>
-      <div class="calc-preview">
-        <div class="calc-item"><div class="calc-label">CAC</div><div class="calc-val" id="prev-cac">—</div></div>
-        <div class="calc-item"><div class="calc-label">Overall ROI</div><div class="calc-val" id="prev-roi">—</div></div>
-        <div class="calc-item"><div class="calc-label">NP prod. ROI</div><div class="calc-val" id="prev-np-roi">—</div></div>
+      <div class="form-group">
+        <div class="form-label">PIN</div>
+        <input class="form-input" id="np-pin" placeholder="4 digits" type="text"/>
       </div>
-      <button class="btn-primary" id="save-btn" onclick="saveEntry()">Save &amp; view scorecard</button>
     </div>
-  </div>
-
-  <div id="page-history" class="page">
-    <div class="chart-card">
-      <div id="history-body"><div class="loading">Loading…</div></div>
+    <div class="form-group">
+      <div class="form-label">Locations</div>
+      <div class="form-hint">Add one location at a time — they can have as many as they need</div>
+      <div id="np-loc-list"></div>
+      <div class="add-loc-inline">
+        <input class="form-input" id="np-loc-input" placeholder="e.g. Main Office" style="font-size:13px;padding:8px 12px" onkeydown="if(event.key==='Enter'){addNewPracticeLoc();event.preventDefault();}"/>
+        <button class="add-loc-btn" onclick="addNewPracticeLoc()" style="white-space:nowrap">+ Add</button>
+      </div>
     </div>
+    <button class="btn-primary" onclick="addPractice()">Create practice</button>
   </div>
-</main>
-
-<footer>
-  <span>Powered by</span>
-  <a href="https://growwithom.com" target="_blank" rel="noopener">
-    <img src="/om-logo.png" alt="OM Performance Marketing"/>
-  </a>
-</footer>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const C={red:'#c0392b',border:'#3a3a3a',muted:'#909090',text:'#f0f0f0',green:'#4cde9a',amber:'#f0b340'};
-let data=[];
+const C={red:'#c0392b',muted:'#909090',green:'#4cde9a',amber:'#f0b340'};
+const ADMINS={OMADMIN:'9999',DEOADMIN:'9999'};
+function isAdminLogin(code,pin){return ADMINS[code]===pin;}
+function isAdminCode(code){return code in ADMINS;}
 let charts={};
+let session={code:null,practice:null,location:null,isAdmin:false};
+let filterMonths=6;
+let newPracticeLocs=[];
 
-async function fetchData(){
-  try{
-    const r=await fetch('/api/entries');
-    data=await r.json();
-  }catch(e){data=[];}
+// ── PRACTICES ────────────────────────────────────────────────
+function loadPractices(){
+  try{const s=localStorage.getItem('deo_practices');if(s)return JSON.parse(s);}catch(e){}
+  const defaults={
+    PRACTICE1:{name:'Practice 1',pin:'1234',locations:['Main Office','North Location']},
+    PRACTICE2:{name:'Practice 2',pin:'5678',locations:['Downtown','Westside']}
+  };
+  savePractices(defaults);seedSampleData();return defaults;
 }
+function savePractices(p){localStorage.setItem('deo_practices',JSON.stringify(p));}
 
-async function saveEntry(){
-  const p=+document.getElementById('f-patients').value;
-  const pr=+document.getElementById('f-production').value;
-  const sp=+document.getElementById('f-spend').value;
-  const np=+document.getElementById('f-np-production').value;
-  const m=+document.getElementById('sel-month').value;
-  const y=+document.getElementById('sel-year').value;
-  if(!p||!pr||!sp||!np){showToast('Please fill in all four fields.','error');return;}
-  const btn=document.getElementById('save-btn');
-  btn.disabled=true;btn.textContent='Saving…';
-  try{
-    await fetch('/api/entries',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({month:m,year:y,patients:p,production:pr,spend:sp,np_production:np})
-    });
-    ['f-patients','f-production','f-spend','f-np-production'].forEach(id=>document.getElementById(id).value='');
-    updatePreview();
-    await fetchData();
-    showToast('Entry saved!','success');
-    showPage('scorecard');
-  }catch(e){showToast('Error saving entry.','error');}
-  btn.disabled=false;btn.textContent='Save & view scorecard';
-}
-
-async function deleteEntry(month,year){
-  if(!confirm('Delete this entry?'))return;
-  await fetch('/api/entries',{
-    method:'DELETE',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({month,year})
+function seedSampleData(){
+  [['PRACTICE1','Main_Office'],['PRACTICE1','North_Location'],['PRACTICE2','Downtown'],['PRACTICE2','Westside']].forEach(([code,loc])=>{
+    const k=`deo_${code}_${loc}`;
+    if(localStorage.getItem(k))return;
+    const entries=[];
+    for(let i=11;i>=0;i--){
+      const d=new Date();d.setMonth(d.getMonth()-i);
+      const m=d.getMonth()+1,y=d.getFullYear();
+      const patients=Math.round(28+Math.random()*28);
+      const production=Math.round((55000+Math.random()*65000)/100)*100;
+      const spend=Math.round((3000+Math.random()*4000)/100)*100;
+      const npProduction=Math.round(production*(0.18+Math.random()*0.18)/100)*100;
+      entries.push({month:m,year:y,patients,production,spend,npProduction});
+    }
+    localStorage.setItem(k,JSON.stringify(entries));
   });
-  await fetchData();
-  renderHistory();
 }
 
+// ── ENTRIES ──────────────────────────────────────────────────
+function storageKey(code,loc){return`deo_${code}_${loc.replace(/\s+/g,'_')}`;}
+function loadEntries(){try{const s=localStorage.getItem(storageKey(session.code,session.location));return s?JSON.parse(s):[]}catch(e){return[];}}
+function saveEntries(data){try{localStorage.setItem(storageKey(session.code,session.location),JSON.stringify(data))}catch(e){}}
+function allSorted(){return loadEntries().sort((a,b)=>(a.year*100+a.month)-(b.year*100+b.month));}
+function filteredSorted(){
+  const all=allSorted();
+  if(filterMonths===0)return all;
+  const cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-filterMonths+1);cutoff.setDate(1);
+  return all.filter(r=>new Date(r.year,r.month-1,1)>=cutoff);
+}
+
+// ── FILTER ───────────────────────────────────────────────────
+function setFilter(months,el){
+  filterMonths=months;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  if(session.isAdmin && !session.location)renderAdminLanding();
+  else renderScorecard();
+}
+
+// ── LOCATION DROPDOWN ────────────────────────────────────────
+function toggleLocDD(e){
+  e.stopPropagation();
+  const menu=document.getElementById('loc-dd-menu');
+  menu.classList.toggle('open');
+}
+document.addEventListener('click',()=>document.getElementById('loc-dd-menu').classList.remove('open'));
+
+function renderLocDD(){
+  const dd=document.getElementById('loc-dd');
+  const menu=document.getElementById('loc-dd-menu');
+  const caret=document.getElementById('loc-caret');
+  if(!session.practice||session.isAdmin){dd.style.display='none';return;}
+  const locs=session.practice.locations||[];
+  if(locs.length<=1){caret.style.display='none';dd.style.pointerEvents='none';dd.style.display='';return;}
+  dd.style.display='';caret.style.display='';dd.style.pointerEvents='auto';
+  menu.innerHTML=locs.map(loc=>`<div class="loc-dd-item ${loc===session.location?'active':''}" onclick="switchLocation('${loc}')">${loc}</div>`).join('');
+}
+
+function switchLocation(loc){
+  session.location=loc;
+  document.getElementById('bar-location').textContent=loc;
+  document.getElementById('log-banner-loc').textContent=`${session.practice.name} — ${loc}`;
+  document.getElementById('loc-dd-menu').classList.remove('open');
+  renderLocDD();
+  showPage('scorecard');
+}
+
+// ── LOGIN ────────────────────────────────────────────────────
+function doLogin(){
+  const code=document.getElementById('login-code').value.trim().toUpperCase();
+  const pin=document.getElementById('login-pin').value.trim();
+  const err=document.getElementById('login-error');
+  if(isAdminLogin(code,pin)){err.textContent='';launchAdmin(code);return;}
+  const practices=loadPractices();
+  const practice=practices[code];
+  if(!practice||practice.pin!==pin){err.textContent='Invalid code or PIN. Please try again.';return;}
+  err.textContent='';
+  session.code=code;session.practice=practice;session.isAdmin=false;
+  if(practice.locations.length===1)enterApp(practice.locations[0]);
+  else showLocationPicker(practice);
+}
+
+function showLocationPicker(practice){
+  document.getElementById('view-login').style.display='none';
+  document.getElementById('view-locations').style.display='flex';
+  document.getElementById('loc-practice-name').textContent=practice.name;
+  document.getElementById('loc-list').innerHTML=practice.locations.map(loc=>`
+    <button class="loc-btn" onclick="enterApp('${loc}')">
+      <span>${loc}</span><span class="loc-btn-arrow">→</span>
+    </button>`).join('');
+}
+
+function enterApp(loc){
+  session.location=loc;
+  document.getElementById('view-login').style.display='none';
+  document.getElementById('view-locations').style.display='none';
+  document.getElementById('view-app').style.display='flex';
+  document.getElementById('admin-bar').style.display='none';
+  document.getElementById('tab-manage').style.display='none';
+  document.getElementById('filter-bar').style.display='flex';
+  document.getElementById('bar-practice').textContent=session.practice.name;
+  document.getElementById('bar-sep').textContent='—';
+  document.getElementById('bar-location').textContent=loc;
+  document.getElementById('log-banner-loc').textContent=`${session.practice.name} — ${loc}`;
+  renderLocDD();
+  showPage('scorecard');
+}
+
+function launchAdmin(adminCode){
+  session.isAdmin=true;
+  session.code=adminCode;
+  const adminLabel=adminCode==='DEOADMIN'?'DEO Admin':'OM Admin';
+  document.getElementById('view-login').style.display='none';
+  document.getElementById('view-app').style.display='flex';
+  document.getElementById('admin-bar').style.display='flex';
+  document.getElementById('tab-manage').style.display='';
+  document.getElementById('filter-bar').style.display='flex';
+  document.getElementById('bar-practice').textContent=adminLabel;
+  document.getElementById('bar-sep').textContent='';
+  document.getElementById('bar-location').textContent='';
+  document.getElementById('loc-dd').style.display='none';
+  const badge=document.querySelector('.admin-badge');
+  if(badge)badge.textContent=adminCode;
+  populateAdminDropdown();
+  destroyCharts();
+  renderAdminLanding();
+}
+
+// ── ADMIN LANDING (LEADERBOARDS) ─────────────────────────────
+function getAllEntriesFor(code,loc){
+  try{const s=localStorage.getItem(`deo_${code}_${loc.replace(/\s+/g,'_')}`);return s?JSON.parse(s):[];}catch(e){return[];}
+}
+
+function renderAdminLanding(){
+  const practices=loadPractices();
+  const allRows=[];
+  const periodCutoff=new Date();periodCutoff.setMonth(periodCutoff.getMonth()-(filterMonths||6)+1);periodCutoff.setDate(1);
+  const useAll=filterMonths===0;
+
+  Object.entries(practices).forEach(([code,p])=>{
+    p.locations.forEach(loc=>{
+      const entries=getAllEntriesFor(code,loc);
+      const filtered=useAll?entries:entries.filter(r=>new Date(r.year,r.month-1,1)>=periodCutoff);
+      if(!filtered.length)return;
+      const n=filtered.length;
+      const patients=filtered.reduce((s,r)=>s+(+r.patients),0);
+      const production=filtered.reduce((s,r)=>s+(+r.production),0);
+      const spend=filtered.reduce((s,r)=>s+(+r.spend),0);
+      const npProd=filtered.reduce((s,r)=>s+(+(r.npProduction||0)),0);
+      allRows.push({
+        code,loc,practiceName:p.name,months:n,
+        avgPatients:patients/n,
+        avgProduction:production/n,
+        avgSpend:spend/n,
+        avgCac:patients?spend/patients:0,
+        avgRoi:spend?production/spend:0,
+        avgNpRoi:spend?npProd/spend:0
+      });
+    });
+  });
+
+  const grid=document.getElementById('kpi-grid');
+  const note=document.getElementById('avg-note');
+  const info=document.getElementById('filter-info');
+  const periodLabel=useAll?'all time':filterMonths===1?'last month':`last ${filterMonths} months`;
+
+  if(!allRows.length){
+    note.textContent='';info.textContent='';
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1;padding:48px"><div class="empty-icon">📊</div><div>No data yet. Practices will appear here once they log their first month.</div></div>';
+    document.querySelectorAll('.chart-card').forEach(c=>c.style.display='none');
+    return;
+  }
+
+  // Roll-up network totals
+  const totalPatients=allRows.reduce((s,r)=>s+r.avgPatients,0);
+  const totalProduction=allRows.reduce((s,r)=>s+r.avgProduction,0);
+  const totalSpend=allRows.reduce((s,r)=>s+r.avgSpend,0);
+  const netRoi=totalSpend?totalProduction/totalSpend:0;
+  const locCount=allRows.length;
+  const practiceCount=Object.keys(practices).length;
+
+  note.textContent=`Network overview — ${periodLabel} (monthly averages across all practices)`;
+  info.textContent=`${practiceCount} practice${practiceCount!==1?'s':''} · ${locCount} location${locCount!==1?'s':''} with data`;
+
+  grid.innerHTML=`
+    <div class="kpi"><div class="kpi-label">Practices</div><div class="kpi-value">${practiceCount}</div><div class="kpi-sub">${locCount} locations</div></div>
+    <div class="kpi"><div class="kpi-label">Avg new patients</div><div class="kpi-value">${fmtN(Math.round(totalPatients))}</div><div class="kpi-sub">network total / month</div></div>
+    <div class="kpi"><div class="kpi-label">Avg production</div><div class="kpi-value">${fmt$(totalProduction)}</div><div class="kpi-sub">network total / month</div></div>
+    <div class="kpi"><div class="kpi-label">Avg ad spend</div><div class="kpi-value">${fmt$(totalSpend)}</div><div class="kpi-sub">network total / month</div></div>
+    <div class="kpi"><div class="kpi-label">Network ROI</div><div class="kpi-value">${netRoi.toFixed(2)}×</div><div class="kpi-sub">production / spend</div></div>
+    <div class="kpi"><div class="kpi-label">Avg CAC</div><div class="kpi-value">${fmt$(totalPatients?totalSpend/totalPatients:0)}</div><div class="kpi-sub">per new patient</div></div>
+  `;
+
+  // Replace chart cards with leaderboards
+  const chartsGrid=document.querySelector('.charts-grid');
+  chartsGrid.style.display='grid';
+  chartsGrid.innerHTML=`
+    <div class="chart-card"><div class="chart-title">🏆 Highest ROI</div>${leaderboardHtml(allRows,'avgRoi',v=>v.toFixed(2)+'×')}</div>
+    <div class="chart-card"><div class="chart-title">👥 Most new patients / month</div>${leaderboardHtml(allRows,'avgPatients',v=>fmtN(Math.round(v)))}</div>
+    <div class="chart-card"><div class="chart-title">💰 Highest production / month</div>${leaderboardHtml(allRows,'avgProduction',v=>fmt$(v))}</div>
+    <div class="chart-card"><div class="chart-title">⚡ Lowest CAC</div>${leaderboardHtml(allRows,'avgCac',v=>fmt$(v),true)}</div>
+  `;
+}
+
+function leaderboardHtml(rows,key,formatter,ascending=false){
+  const sorted=[...rows].sort((a,b)=>ascending?a[key]-b[key]:b[key]-a[key]).slice(0,5);
+  if(!sorted.length)return'<div class="empty" style="padding:20px">No data</div>';
+  const max=Math.max(...sorted.map(r=>r[key]));
+  const min=Math.min(...sorted.map(r=>r[key]));
+  return`<div style="display:flex;flex-direction:column;gap:8px">${sorted.map((r,i)=>{
+    const pct=ascending?(min&&r[key]?min/r[key]*100:100):(max?r[key]/max*100:0);
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':`<span style="color:var(--muted);font-weight:600;font-size:12px;width:20px;display:inline-block;text-align:center">${i+1}</span>`;
+    return`<div class="lb-row" onclick="jumpToPracticeFromLeaderboard('${r.code}','${r.loc}')" style="cursor:pointer;padding:10px 12px;background:#111;border:1px solid var(--border);border-radius:8px;transition:border .15s" onmouseover="this.style.borderColor='#c0392b'" onmouseout="this.style.borderColor='var(--border)'">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1">
+          <span style="font-size:16px;flex-shrink:0">${medal}</span>
+          <div style="min-width:0;overflow:hidden">
+            <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.practiceName}</div>
+            <div style="font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.loc}</div>
+          </div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:#c0392b;flex-shrink:0">${formatter(r[key])}</div>
+      </div>
+      <div style="height:3px;background:#2a2a2a;border-radius:2px;overflow:hidden"><div style="height:100%;width:${pct}%;background:#c0392b"></div></div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function jumpToPracticeFromLeaderboard(code,loc){
+  document.getElementById('admin-select').value=code+'|'+loc;
+  adminSwitch();
+}
+
+function populateAdminDropdown(){
+  const practices=loadPractices();
+  const sel=document.getElementById('admin-select');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— Select a practice / location —</option>';
+  Object.entries(practices).forEach(([code,p])=>{
+    p.locations.forEach(loc=>{
+      const o=document.createElement('option');
+      o.value=code+'|'+loc;
+      o.textContent=p.name+' — '+loc;
+      if(o.value===cur)o.selected=true;
+      sel.appendChild(o);
+    });
+  });
+}
+
+function adminSwitch(){
+  const val=document.getElementById('admin-select').value;
+  if(!val){renderAdminLanding();return;}
+  const [code,loc]=val.split('|');
+  const practices=loadPractices();
+  session.code=code;session.location=loc;session.practice=practices[code];
+  document.getElementById('bar-sep').textContent='—';
+  document.getElementById('bar-location').textContent=`${practices[code].name} — ${loc}`;
+  document.getElementById('log-banner-loc').textContent=`${practices[code].name} — ${loc}`;
+  // Restore normal charts grid
+  const chartsGrid=document.querySelector('.charts-grid');
+  chartsGrid.innerHTML=`
+    <div class="chart-card"><div class="chart-title">New patients / month</div><div class="chart-wrap"><canvas id="c-patients" role="img" aria-label="New patients"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">Total production ($)</div><div class="chart-wrap"><canvas id="c-production" role="img" aria-label="Production"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">CAC — cost per new patient</div><div class="chart-wrap"><canvas id="c-cac" role="img" aria-label="CAC"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">New patient production ROI</div><div class="chart-wrap"><canvas id="c-roi" role="img" aria-label="NP ROI"></canvas></div></div>
+  `;
+  showPage('scorecard');
+}
+
+function doLogout(){
+  session={code:null,practice:null,location:null,isAdmin:false};
+  document.getElementById('view-app').style.display='none';
+  document.getElementById('view-locations').style.display='none';
+  document.getElementById('view-login').style.display='flex';
+  document.getElementById('login-code').value='';
+  document.getElementById('login-pin').value='';
+  document.getElementById('login-error').textContent='';
+  destroyCharts();
+}
+
+// ── PAGES ────────────────────────────────────────────────────
 function showPage(p,el){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   const tab=el||document.querySelector(`.tab[onclick*="'${p}'"]`);
   if(tab)tab.classList.add('active');
+  document.getElementById('filter-bar').style.display=(p==='scorecard')?'flex':'none';
   if(p==='scorecard')renderScorecard();
   if(p==='history')renderHistory();
+  if(p==='manage')renderManage();
+  // hide log banner for admin if no practice selected
+  const showBanner=session.location && (p==='log');
+  const banner=document.getElementById('log-banner');
+  if(banner)banner.style.display=showBanner?'':'none';
 }
 
+// ── SCORECARD ────────────────────────────────────────────────
 function fmt$(n){return'$'+Math.round(n).toLocaleString('en-US');}
 function fmtN(n){return(+n).toLocaleString('en-US');}
-function sorted(){return [...data].sort((a,b)=>(a.year*100+a.month)-(b.year*100+b.month));}
+function avg(arr,key){if(!arr.length)return 0;return arr.reduce((s,r)=>s+(+r[key]),0)/arr.length;}
 function monthLabel(m,y){return MONTHS[m-1]+' '+y;}
 
-function delta(arr,key){
-  if(arr.length<2)return null;
-  const prev=+arr[arr.length-2][key],cur=+arr[arr.length-1][key];
-  if(!prev)return null;
-  return((cur-prev)/prev*100).toFixed(1);
-}
-
 function renderScorecard(){
-  const s=sorted();
+  if(!session.location)return;
+  const s=filteredSorted(),all=allSorted();
   const grid=document.getElementById('kpi-grid');
+  const note=document.getElementById('avg-note');
+  const info=document.getElementById('filter-info');
   if(!s.length){
-    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📊</div><div>No data yet — log your first month to get started.</div></div>';
-    destroyCharts();return;
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1;padding:48px"><div class="empty-icon">📊</div><div>No data for this time period.</div></div>';
+    note.textContent='';info.textContent='';destroyCharts();return;
   }
-  const last=s[s.length-1];
-  const cac=last.patients?last.spend/last.patients:0;
-  const roi=last.spend?last.production/last.spend:0;
-  const npRoi=last.spend&&last.np_production?last.np_production/last.spend:0;
+  const n=s.length;
+  const label=filterMonths===0?'All time':filterMonths===1?'Last month':`Last ${filterMonths} months`;
+  note.textContent=`Monthly averages — ${label} (${n} month${n!==1?'s':''})`;
+  info.textContent=monthLabel(s[0].month,s[0].year)+' – '+monthLabel(s[n-1].month,s[n-1].year);
 
-  function kpiDelta(key,invert=false){
-    const d=delta(s,key);if(d===null)return'';
+  const avgPatients=avg(s,'patients'),avgProduction=avg(s,'production'),avgSpend=avg(s,'spend'),avgNpProd=avg(s,'npProduction');
+  const avgCac=avgPatients?avgSpend/avgPatients:0;
+  const avgRoi=avgSpend?avgProduction/avgSpend:0;
+  const avgNpRoi=avgSpend&&avgNpProd?avgNpProd/avgSpend:0;
+
+  function periodDelta(key,invert=false){
+    if(all.length<=n)return'';
+    const prev=all.slice(Math.max(0,all.length-n*2),all.length-n);
+    if(!prev.length)return'';
+    const prevAvg=avg(prev,key),curAvg=avg(s,key);
+    if(!prevAvg)return'';
+    const d=((curAvg-prevAvg)/prevAvg*100).toFixed(1);
     const up=invert?(+d<0):(+d>0);
-    return`<div class="kpi-delta ${up?'up':'down'}">${+d>0?'▲':'▼'} ${Math.abs(d)}% vs prev</div>`;
+    return`<div class="kpi-delta ${up?'up':'down'}">${+d>0?'▲':'▼'} ${Math.abs(d)}% vs prior period</div>`;
   }
 
   grid.innerHTML=`
-    <div class="kpi"><div class="kpi-label">New patients</div><div class="kpi-value">${fmtN(last.patients)}</div>${kpiDelta('patients')}<div class="kpi-sub">${monthLabel(last.month,last.year)}</div></div>
-    <div class="kpi"><div class="kpi-label">Total production</div><div class="kpi-value">${fmt$(last.production)}</div>${kpiDelta('production')}</div>
-    <div class="kpi"><div class="kpi-label">Ad spend</div><div class="kpi-value">${fmt$(last.spend)}</div>${kpiDelta('spend',true)}</div>
-    <div class="kpi"><div class="kpi-label">CAC</div><div class="kpi-value">${fmt$(cac)}</div><div class="kpi-sub">per new patient</div></div>
-    <div class="kpi"><div class="kpi-label">Overall ROI</div><div class="kpi-value">${(+roi).toFixed(2)}×</div><div class="kpi-sub">total production / spend</div></div>
-    <div class="kpi"><div class="kpi-label">New pt. production ROI</div><div class="kpi-value">${(+npRoi).toFixed(2)}×</div><div class="kpi-sub">new pt. production / spend</div></div>
+    <div class="kpi"><div class="kpi-label">Avg new patients</div><div class="kpi-value">${fmtN(Math.round(avgPatients))}</div>${periodDelta('patients')}<div class="kpi-sub">per month</div></div>
+    <div class="kpi"><div class="kpi-label">Avg production</div><div class="kpi-value">${fmt$(avgProduction)}</div>${periodDelta('production')}<div class="kpi-sub">per month</div></div>
+    <div class="kpi"><div class="kpi-label">Avg ad spend</div><div class="kpi-value">${fmt$(avgSpend)}</div>${periodDelta('spend',true)}<div class="kpi-sub">per month</div></div>
+    <div class="kpi"><div class="kpi-label">Avg CAC</div><div class="kpi-value">${fmt$(avgCac)}</div>${periodDelta('spend',true)}<div class="kpi-sub">per new patient</div></div>
+    <div class="kpi"><div class="kpi-label">Avg overall ROI</div><div class="kpi-value">${avgRoi.toFixed(2)}×</div><div class="kpi-sub">production / spend</div></div>
+    <div class="kpi"><div class="kpi-label">Avg NP prod. ROI</div><div class="kpi-value">${avgNpRoi.toFixed(2)}×</div><div class="kpi-sub">NP production / spend</div></div>
   `;
 
   const labels=s.map(r=>MONTHS[r.month-1]+' '+String(r.year).slice(2));
   makeChart('c-patients',labels,s.map(r=>+r.patients),'New patients',C.red,false);
   makeChart('c-production',labels,s.map(r=>+r.production),'Production',C.red,true);
   makeChart('c-cac',labels,s.map(r=>r.patients?+(r.spend/r.patients).toFixed(0):0),'CAC',C.amber,true);
-  makeChart('c-roi',labels,s.map(r=>r.spend&&r.np_production?+(r.np_production/r.spend).toFixed(2):0),'NP ROI',C.green,false);
+  makeChart('c-roi',labels,s.map(r=>r.spend&&r.npProduction?+(r.npProduction/r.spend).toFixed(2):0),'NP ROI',C.green,false);
 }
 
 function chartOpts(labels,vals,label,color,isCurrency){
   return{type:'line',data:{labels,datasets:[{label,data:vals,borderColor:color,backgroundColor:color+'22',borderWidth:2.5,pointBackgroundColor:color,pointRadius:4,pointHoverRadius:6,tension:.35,fill:true}]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>isCurrency?'$'+c.parsed.y.toLocaleString():c.parsed.y}}},
-      scales:{
-        x:{ticks:{color:C.muted,font:{size:11},maxRotation:45,autoSkip:false},grid:{color:'#3a3a3a55'}},
-        y:{ticks:{color:C.muted,font:{size:11},callback:v=>isCurrency?'$'+Number(v).toLocaleString():v},grid:{color:'#3a3a3a55'}}
-      }
+      scales:{x:{ticks:{color:C.muted,font:{size:11},maxRotation:45,autoSkip:false},grid:{color:'#3a3a3a55'}},
+              y:{ticks:{color:C.muted,font:{size:11},callback:v=>isCurrency?'$'+Number(v).toLocaleString():v},grid:{color:'#3a3a3a55'}}}
     }
   };
 }
-
 function makeChart(id,labels,vals,label,color,isCurrency){
   if(charts[id])charts[id].destroy();
-  const canvas=document.getElementById(id);
-  if(!canvas)return;
+  const canvas=document.getElementById(id);if(!canvas)return;
   charts[id]=new Chart(canvas,chartOpts(labels,vals,label,color,isCurrency));
 }
-
 function destroyCharts(){Object.values(charts).forEach(c=>c.destroy());charts={};}
 
+// ── LOG MONTH ────────────────────────────────────────────────
 function updatePreview(){
   const p=+document.getElementById('f-patients').value||0;
   const pr=+document.getElementById('f-production').value||0;
@@ -291,34 +765,156 @@ function updatePreview(){
   document.getElementById('prev-np-roi').textContent=sp&&np?(np/sp).toFixed(2)+'×':'—';
 }
 
+function saveEntry(){
+  if(!session.location){showToast('Select a practice first.','error');return;}
+  const p=+document.getElementById('f-patients').value;
+  const pr=+document.getElementById('f-production').value;
+  const sp=+document.getElementById('f-spend').value;
+  const np=+document.getElementById('f-np-production').value;
+  const m=+document.getElementById('sel-month').value;
+  const y=+document.getElementById('sel-year').value;
+  if(!p||!pr||!sp||!np){showToast('Please fill in all four fields.','error');return;}
+  let data=loadEntries();
+  const idx=data.findIndex(r=>r.year*100+r.month===y*100+m);
+  const entry={month:m,year:y,patients:p,production:pr,spend:sp,npProduction:np};
+  if(idx>=0)data[idx]=entry;else data.push(entry);
+  saveEntries(data);
+  ['f-patients','f-production','f-spend','f-np-production'].forEach(id=>document.getElementById(id).value='');
+  updatePreview();showToast('Entry saved!','success');showPage('scorecard');
+}
+
+// ── HISTORY ──────────────────────────────────────────────────
+function deleteEntry(month,year){
+  if(!confirm('Delete this entry?'))return;
+  saveEntries(loadEntries().filter(r=>!(r.month===month&&r.year===year)));
+  renderHistory();
+}
 function renderHistory(){
-  const s=sorted().reverse();
+  const s=allSorted().reverse();
   const body=document.getElementById('history-body');
   if(!s.length){body.innerHTML='<div class="empty"><div class="empty-icon">🗂</div><div>No entries yet.</div></div>';return;}
   body.innerHTML=`<div class="history-wrap"><table class="history-table">
     <thead><tr><th>Month</th><th>New patients</th><th>Total production</th><th>NP production</th><th>Ad spend</th><th>CAC</th><th>Overall ROI</th><th>NP prod. ROI</th><th></th></tr></thead>
     <tbody>${s.map(r=>{
-      const cac=r.patients?r.spend/r.patients:0;
-      const roi=r.spend?r.production/r.spend:0;
-      const npRoi=r.spend&&r.np_production?r.np_production/r.spend:0;
-      return`<tr>
-        <td><span class="badge">${monthLabel(r.month,r.year)}</span></td>
-        <td>${fmtN(r.patients)}</td><td>${fmt$(r.production)}</td><td>${fmt$(r.np_production||0)}</td>
+      const cac=r.patients?r.spend/r.patients:0,roi=r.spend?r.production/r.spend:0,npRoi=r.spend&&r.npProduction?r.npProduction/r.spend:0;
+      return`<tr><td><span class="badge">${monthLabel(r.month,r.year)}</span></td>
+        <td>${fmtN(r.patients)}</td><td>${fmt$(r.production)}</td><td>${fmt$(r.npProduction||0)}</td>
         <td>${fmt$(r.spend)}</td><td>${fmt$(cac)}</td>
         <td>${(+roi).toFixed(2)}×</td><td>${(+npRoi).toFixed(2)}×</td>
-        <td><button class="del-btn" onclick="deleteEntry(${r.month},${r.year})">✕</button></td>
-      </tr>`;
-    }).join('')}</tbody>
-  </table></div>`;
+        <td><button class="del-btn" onclick="deleteEntry(${r.month},${r.year})">✕</button></td></tr>`;
+    }).join('')}</tbody></table></div>`;
 }
 
+// ── MANAGE PRACTICES ─────────────────────────────────────────
+function openAddModal(){
+  newPracticeLocs=[];
+  document.getElementById('np-name').value='';
+  document.getElementById('np-code').value='';
+  document.getElementById('np-pin').value='';
+  document.getElementById('np-loc-input').value='';
+  renderNewPracticeLocs();
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('np-name').focus(),50);
+}
+function closeAddModal(){document.getElementById('add-modal').classList.remove('open');}
+
+function renderNewPracticeLocs(){
+  const list=document.getElementById('np-loc-list');
+  if(!newPracticeLocs.length){list.innerHTML='';return;}
+  list.innerHTML=newPracticeLocs.map((loc,i)=>`
+    <div class="loc-list-item">
+      <span>${loc}</span>
+      <button onclick="removeNewPracticeLoc(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addNewPracticeLoc(){
+  const input=document.getElementById('np-loc-input');
+  const val=input.value.trim();
+  if(!val)return;
+  if(newPracticeLocs.includes(val)){showToast('Location already added.','error');return;}
+  newPracticeLocs.push(val);input.value='';
+  renderNewPracticeLocs();input.focus();
+}
+
+function removeNewPracticeLoc(i){
+  newPracticeLocs.splice(i,1);
+  renderNewPracticeLocs();
+}
+
+function addPractice(){
+  const name=document.getElementById('np-name').value.trim();
+  const code=document.getElementById('np-code').value.trim().toUpperCase();
+  const pin=document.getElementById('np-pin').value.trim();
+  const pendingLoc=document.getElementById('np-loc-input').value.trim();
+  if(pendingLoc&&!newPracticeLocs.includes(pendingLoc))newPracticeLocs.push(pendingLoc);
+  if(!name||!code||!pin){showToast('Please fill in name, code, and PIN.','error');return;}
+  if(!newPracticeLocs.length){showToast('Add at least one location.','error');return;}
+  const practices=loadPractices();
+  if(practices[code]||isAdminCode(code)){showToast('That code is already taken.','error');return;}
+  practices[code]={name,pin,locations:[...newPracticeLocs]};
+  savePractices(practices);
+  closeAddModal();
+  populateAdminDropdown();renderManage();
+  showToast(`Practice created with ${newPracticeLocs.length} location${newPracticeLocs.length>1?'s':''}!`,'success');
+}
+
+function addLocation(code){
+  const input=document.getElementById('add-loc-'+code);
+  const loc=input.value.trim();if(!loc)return;
+  const practices=loadPractices();
+  if(practices[code].locations.includes(loc)){showToast('Location already exists.','error');return;}
+  practices[code].locations.push(loc);
+  savePractices(practices);input.value='';
+  populateAdminDropdown();renderManage();
+  showToast('Location added!','success');
+}
+
+function removeLocation(code,loc){
+  const practices=loadPractices();
+  if(practices[code].locations.length<=1){showToast('A practice must have at least one location.','error');return;}
+  if(!confirm(`Remove "${loc}"?`))return;
+  practices[code].locations=practices[code].locations.filter(l=>l!==loc);
+  savePractices(practices);populateAdminDropdown();renderManage();
+}
+
+function deletePractice(code){
+  const practices=loadPractices();
+  if(!confirm(`Delete ${practices[code].name}? This cannot be undone.`))return;
+  delete practices[code];savePractices(practices);
+  populateAdminDropdown();renderManage();
+  showToast('Practice deleted.','success');
+}
+
+function renderManage(){
+  const practices=loadPractices();
+  const grid=document.getElementById('manage-grid');
+  if(!Object.keys(practices).length){grid.innerHTML='<div class="empty">No practices yet. Click "+ Add practice" to create your first one.</div>';return;}
+  grid.innerHTML=Object.entries(practices).map(([code,p])=>`
+    <div class="practice-card">
+      <div class="practice-card-header">
+        <div>
+          <div class="practice-card-name">${p.name}</div>
+          <div class="practice-card-code">Code: ${code} &nbsp;|&nbsp; PIN: ${p.pin}</div>
+        </div>
+        <button class="btn-danger" onclick="deletePractice('${code}')">Delete</button>
+      </div>
+      <div style="margin-bottom:10px">
+        ${p.locations.map(loc=>`<span class="loc-tag">${loc}<button class="loc-tag-del" onclick="removeLocation('${code}','${loc}')">✕</button></span>`).join('')}
+      </div>
+      <div class="add-loc-row">
+        <input class="add-loc-input" id="add-loc-${code}" placeholder="Add a location…"/>
+        <button class="add-loc-btn" onclick="addLocation('${code}')">Add</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── UTILS ────────────────────────────────────────────────────
 function showToast(msg,type='success'){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast '+type;
-  t.classList.add('show');
+  t.textContent=msg;t.className='toast '+type;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
 }
-
 function initYearSelect(){
   const sel=document.getElementById('sel-year');
   const now=new Date();const cy=now.getFullYear();
@@ -326,14 +922,10 @@ function initYearSelect(){
   document.getElementById('sel-month').value=now.getMonth()+1;
   sel.addEventListener('change',updatePreview);
   document.getElementById('sel-month').addEventListener('change',updatePreview);
-  updatePreview();
 }
 
-(async()=>{
-  initYearSelect();
-  await fetchData();
-  renderScorecard();
-})();
+loadPractices();
+initYearSelect();
 </script>
 </body>
 </html>
